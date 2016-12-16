@@ -1,0 +1,22 @@
+.add-top {
+	margin-top: 15px;
+}
+
+.inspector {
+	max-height: 300px;
+}
+
+.color-line-bg {
+	background: #05326d !important;
+}
+
+.color-line {
+	background: #05326d;
+	background-image: -webkit-radial-gradient(closest-corner, rgba(105,151,211,0) 60%, rgba(105,151,211,0.26)),-webkit-linear-gradient(108deg, #006c51, #0e51a7 90%);
+	background-image: -moz-radial-gradient(closest-corner, rgba(105,151,211,0) 60%, rgba(105,151,211,0.26)),-moz-linear-gradient(108deg, #006c51, #0e51a7 90%);
+	background-image: -ms-radial-gradient(closest-corner, rgba(105,151,211,0) 60%, rgba(105,151,211,0.26)),-ms-linear-gradient(108deg, #006c51, #0e51a7 90%);
+}
+
+img.logo-image {
+	max-height: 20px;
+}
