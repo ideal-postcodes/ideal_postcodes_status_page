@@ -24,13 +24,13 @@ status.ideal-postcodes.co.uk is simple static web page designed to relay histori
 
 ### Uptime Robot Probes
 
-The status page queries the Uptime Robot API to retrieve historical availability and latencies. Probe keys can be updated at [`app/config.js`](app/config/js)
+The status page queries the Uptime Robot API to retrieve historical availability and latencies. Probe keys can be updated at [`app/config.js`](app/config.js)
 
 ### Incidents
 
 List any incidents that may have befallen one of your services
 
-Incident history can be updated at [`app/config.js`](app/config/js)
+Incident history can be updated at [`app/config.js`](app/config.js)
 
 ### Branding
 
