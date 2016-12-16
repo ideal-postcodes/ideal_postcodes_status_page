@@ -1,6 +1,6 @@
 # Ideal Postcodes Status Page
 
-status.ideal-postcodes.co.uk is simple static web page designed to relay historical uptime from an external uptime monitoring service along with any incident information from a static JS object
+status.ideal-postcodes.co.uk is simple static web page designed to relay historical uptime from an external uptime monitoring service along with any incident information from a static JS file
 
 ## Design Goals
 
