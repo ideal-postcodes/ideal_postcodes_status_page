@@ -46,8 +46,6 @@ npm run build
 
 You can then serve the status page directly from the `public/` directory and push it to your servers via FTP or `git push`
 
-As this just compiles into a simple static page, you may serve it from any static hosting service (e.g. S3). Deployment options Geographic replication is also fairly trivial
-
 # Licence 
 
 MIT
