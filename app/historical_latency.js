@@ -72,7 +72,7 @@ class HistoricalLatency extends React.Component {
 			<div className="box box-success">
 				<div className="box-header with-border">
 					<h3 className="box-title">Global Latency Statistics</h3>
-					<p>Statistics displayed are average latency numbers from probes based in North America, South America, Europe, Asia and Oceania</p>
+					<p>Statistics displayed are average latency numbers from probes based around the world</p>
 					<div className="box-tools pull-right">
 						<button className="btn btn-box-tool" data-widget="collapse"><i className="fa fa-minus"></i></button>
 					</div>
