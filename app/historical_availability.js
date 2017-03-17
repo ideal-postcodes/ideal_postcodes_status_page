@@ -34,7 +34,7 @@ class HistoricalAvailability extends React.Component {
 							<thead>
 								<tr>
 									<th>Service</th>
-									<th>Today</th>
+									<th>24 Hours</th>
 									<th>7 Day</th>
 									<th>30 Day</th>
 									<th>180 Day</th>
