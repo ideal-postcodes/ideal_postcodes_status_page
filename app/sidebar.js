@@ -47,6 +47,7 @@ class Sidebar extends React.Component {
 								<li><a href="mailto:support@ideal-postcodes.co.uk"><i className="fa fa-envelope-o"></i> Email</a></li>
 								<li><a href="tel:+4408458620898"><i className="fa fa-phone"></i> 0845 862 0898</a></li>
 								<li><a href="https://twitter.com/idealpostcodes" target="_blank"><i className="fa fa-twitter"></i> Twitter</a></li>
+								<li><a href="https://github.com/ideal-postcodes/ideal_postcodes_status_page" target="_blank"><i className="fa fa-github"></i> Github</a></li>
 							</ul>
 						</li>
 					</ul>
