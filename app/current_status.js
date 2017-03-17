@@ -10,9 +10,9 @@ class CurrentStatus extends React.Component {
 		const availability = _.toArray(this.props.monitors)
 			.sort((a, b) => a.friendly_name.localeCompare(b.friendly_name))
 			.map(monitor => {
-				if (monitor.status === "2") {
+				if (monitor.status === 2) {
 					return <MonitorUp monitor={monitor} key={monitor.id}/>;
-				} else if (monitor.status === "1") {
+				} else if (monitor.status === 8 || monitor.status === 9) {
 					return <MonitorDown monitor={monitor} key={monitor.id}/>;
 				} else {
 					return;
