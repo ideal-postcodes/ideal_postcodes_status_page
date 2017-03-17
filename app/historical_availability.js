@@ -8,14 +8,14 @@ class HistoricalAvailability extends React.Component {
 
 	render() {
 		const rows = _.toArray(this.props.monitors)
-			.sort((a, b) => a.friendlyname.localeCompare(b.friendlyname))
+			.sort((a, b) => a.friendly_name.localeCompare(b.friendly_name))
 			.map(monitor => {
-				let uptimes = monitor.customuptimeratio.split("-").map((uptime, i) => {
-					return <td key={i}>{uptime}%</td> 
+				let uptimes = monitor.custom_uptime_ratio.split("-").map((uptime, i) => {
+					return <td key={i} className="text-right number-font">{uptime}</td> 
 				});
 				return (
 					<tr key={monitor.id}>
-						<td>{monitor.friendlyname}</td>
+						<td>{monitor.friendly_name}</td>
 						{uptimes}
 					</tr>
 				);
@@ -34,11 +34,11 @@ class HistoricalAvailability extends React.Component {
 							<thead>
 								<tr>
 									<th>Service</th>
-									<th>24 Hours</th>
-									<th>7 Day</th>
-									<th>30 Day</th>
-									<th>180 Day</th>
-									<th>1 Year</th>
+									<th className="text-right">24 Hours</th>
+									<th className="text-right">7 Day</th>
+									<th className="text-right">30 Day</th>
+									<th className="text-right">180 Day</th>
+									<th className="text-right">1 Year</th>
 								</tr>
 							</thead>
 							<tbody>

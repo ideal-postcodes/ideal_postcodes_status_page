@@ -37,8 +37,9 @@ class Dashboard extends React.Component {
 		this.props.keys.forEach(mon => {
 			let key = mon.key
 			this.retrieveMonitorData(key, (data, error) => {
+				console.log(data.monitors[0]);
 				const monitors = this.state.monitors;
-				monitors[key] = data.monitors.monitor[0];
+				monitors[key] = data.monitors[0];
 				monitors[key].key = key;
 				this.setState({ monitors: monitors });
 			});
@@ -50,17 +51,15 @@ class Dashboard extends React.Component {
 	}
 
 	monitorUrl() {
-		return "https://api.uptimerobot.com/getMonitors";
+		return "https://api.uptimerobot.com/v2/getMonitors";
 	}
 
 	retrieveMonitorData(key, callback) {
-		return $.getJSON(this.monitorUrl(), {
-			apiKey: key,
-			format: "json",
-			noJsonCallback: 1,
-			responseTimes: 1,
-			responseTimesAverage: 30,
-			"customUptimeRatio": "1-7-30-180-365"
+		return $.post(this.monitorUrl(), {
+			api_key: key,
+			response_times: 1,
+			response_times_average: 30,
+			custom_uptime_ratios: "1-7-30-180-365"
 		}, callback);
 	}
 

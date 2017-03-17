@@ -8,7 +8,7 @@ class CurrentStatus extends React.Component {
 
 	render() {
 		const availability = _.toArray(this.props.monitors)
-			.sort((a, b) => a.friendlyname.localeCompare(b.friendlyname))
+			.sort((a, b) => a.friendly_name.localeCompare(b.friendly_name))
 			.map(monitor => {
 				if (monitor.status === "2") {
 					return <MonitorUp monitor={monitor} key={monitor.id}/>;
@@ -40,7 +40,7 @@ class MonitorUp extends React.Component {
 		return (
 			<div className="col-lg-3 col-xs-6">
 				<div className="small-box bg-green">
-					<span className="small-box-footer">{monitor.friendlyname} <i className="fa fa-check"></i></span>
+					<span className="small-box-footer">{monitor.friendly_name} <i className="fa fa-check"></i></span>
 					<div className="inner">
 						<h3>Up</h3>
 						<p>Service Operational</p>
@@ -68,7 +68,7 @@ class MonitorDown extends React.Component {
 		return (
 			<div className="col-lg-3 col-xs-6">
 				<div className="small-box bg-yellow">
-					<span className="small-box-footer">{monitor.friendlyname} <i className="fa fa-exclamation-circle"></i></span>
+					<span className="small-box-footer">{monitor.friendly_name} <i className="fa fa-exclamation-circle"></i></span>
 					<div className="inner">
 						<h3>Down</h3>
 						<p>Service Disruption</p>

@@ -14,11 +14,11 @@ class Sidebar extends React.Component {
 
 	render() {
 		const services = _.toArray(this.props.monitors)
-			.sort((a, b) => a.friendlyname.localeCompare(b.friendlyname))
+			.sort((a, b) => a.friendly_name.localeCompare(b.friendly_name))
 			.map(m => {
 				return (
-					<li key={m.friendlyname}>
-						<a href="#" onClick={this.handleClick.bind(this)} value={m.key}>{m.friendlyname}</a>
+					<li key={m.friendly_name}>
+						<a href="#" onClick={this.handleClick.bind(this)} value={m.key}>{m.friendly_name}</a>
 					</li>
 				);
 			});

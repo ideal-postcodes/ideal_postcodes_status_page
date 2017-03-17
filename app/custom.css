@@ -20,3 +20,7 @@
 img.logo-image {
 	max-height: 20px;
 }
+
+.number-font {
+	font-family: monospace, "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter";
+}

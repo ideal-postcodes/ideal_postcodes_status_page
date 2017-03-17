@@ -26,22 +26,23 @@ class HistoricalLatency extends React.Component {
 
 	render() {
 		const responseCharts = _.toArray(this.props.monitors)
-			.sort((a, b) => a.friendlyname.localeCompare(b.friendlyname))
+			.sort((a, b) => a.friendly_name.localeCompare(b.friendly_name))
 			.map(monitor => {
 				const responseData = {
-					labels: monitor.responsetime
+					labels: monitor.response_times
 						.reverse()
-						.map(elem => new Date(elem.datetime)),
+						.map(elem => new Date(elem.datetime * 1000)),
 					datasets: [{
 						label: "Latency (ms)",
-						data: monitor.responsetime.reverse().map(elem => parseInt(elem.value, 10))
+						data: monitor.response_times.reverse().map(elem => parseInt(elem.value, 10))
 					}]
 				}
+				console.log(responseData.labels)
 				const options = {
 					title: {
 						display: true,
 						position: "top",
-						text: `${monitor.friendlyname}, Global Probe Latency (ms)`
+						text: `${monitor.friendly_name}, Global Probe Latency (ms)`
 					},
 					legend: {
 						display: false
