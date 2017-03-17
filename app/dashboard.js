@@ -37,7 +37,6 @@ class Dashboard extends React.Component {
 		this.props.keys.forEach(mon => {
 			let key = mon.key
 			this.retrieveMonitorData(key, (data, error) => {
-				console.log(data.monitors[0]);
 				const monitors = this.state.monitors;
 				monitors[key] = data.monitors[0];
 				monitors[key].key = key;

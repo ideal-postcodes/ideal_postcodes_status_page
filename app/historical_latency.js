@@ -37,7 +37,6 @@ class HistoricalLatency extends React.Component {
 						data: monitor.response_times.reverse().map(elem => parseInt(elem.value, 10))
 					}]
 				}
-				console.log(responseData.labels)
 				const options = {
 					title: {
 						display: true,
