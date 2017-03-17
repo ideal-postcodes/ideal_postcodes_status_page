@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.2.1] - 2017-03-17
+- Fix broken status widget
+
 ## [0.2.0] - 2017-03-17
 - Updated to use UptimeRobot's v2 API
 
