@@ -8,8 +8,8 @@
     "url": ""
   },
   "scripts": {
-    "start": "brunch watch --server",
-    "build": "NODE_ENV=production brunch build --production"
+    "start": "./node_modules/.bin/brunch watch --server",
+    "build": "NODE_ENV=production ./node_modules/.bin/brunch build --production"
   },
   "dependencies": {
     "chart.js": "~2.5.0",
