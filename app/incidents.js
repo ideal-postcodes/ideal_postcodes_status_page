@@ -1,4 +1,5 @@
 const React = require("react");
+const PropTypes = require("prop-types");
 const history = require("/config").incidentHistory;
 
 const dateId = d => {
@@ -34,7 +35,7 @@ class NoIncidentLine extends React.Component {
 };
 
 NoIncidentLine.propTypes = {
-	date: React.PropTypes.object.isRequired
+	date: PropTypes.object.isRequired
 };
 
 class IncidentLine extends React.Component {
@@ -57,8 +58,8 @@ class IncidentLine extends React.Component {
 };
 
 IncidentLine.propTypes = {
-	date: React.PropTypes.object.isRequired,
-	message: React.PropTypes.string.isRequired
+	date: PropTypes.object.isRequired,
+	message: PropTypes.string.isRequired
 };
 
 const subtractDays = (currentDay, offset) => {

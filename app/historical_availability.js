@@ -1,5 +1,6 @@
 const _ = require("lodash");
 const React = require("react");
+const PropTypes = require("prop-types");
 
 class HistoricalAvailability extends React.Component {
 	constructor() {
@@ -53,7 +54,7 @@ class HistoricalAvailability extends React.Component {
 };
 
 HistoricalAvailability.propTypes = {
-	monitors: React.PropTypes.object.isRequired
+	monitors: PropTypes.object.isRequired
 };
 
 module.exports = HistoricalAvailability;

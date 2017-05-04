@@ -1,5 +1,6 @@
 const _ = require("lodash");
 const React = require("react");
+const PropTypes = require("prop-types");
 
 class Sidebar extends React.Component {
 	constructor() {
@@ -58,8 +59,8 @@ class Sidebar extends React.Component {
 }
 
 Sidebar.propTypes = {
-	monitors: React.PropTypes.object.isRequired,
-	setFocus: React.PropTypes.func.isRequired
+	monitors: PropTypes.object.isRequired,
+	setFocus: PropTypes.func.isRequired
 };
 
 module.exports = Sidebar;

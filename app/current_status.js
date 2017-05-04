@@ -1,5 +1,6 @@
 const _ = require("lodash");
 const React = require("react");
+const PropTypes = require("prop-types");
 
 class CurrentStatus extends React.Component {
 	constructor() {
@@ -27,7 +28,7 @@ class CurrentStatus extends React.Component {
 }
 
 CurrentStatus.propTypes = {
-	monitors: React.PropTypes.object.isRequired
+	monitors: PropTypes.object.isRequired
 };
 
 class MonitorUp extends React.Component {
@@ -55,7 +56,7 @@ class MonitorUp extends React.Component {
 }
 
 MonitorUp.propTypes = {
-	monitor: React.PropTypes.object.isRequired
+	monitor: PropTypes.object.isRequired
 };
 
 class MonitorDown extends React.Component {
@@ -83,7 +84,7 @@ class MonitorDown extends React.Component {
 };
 
 MonitorDown.propTypes = {
-	monitor: React.PropTypes.object.isRequired
+	monitor: PropTypes.object.isRequired
 };
 
 module.exports = CurrentStatus;

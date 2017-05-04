@@ -1,5 +1,6 @@
 const _ = require("lodash");
 const React = require("react");
+const PropTypes = require("prop-types");
 const Chart = require("chart.js");
 const ReactDOM = require("react-dom");
 
@@ -87,7 +88,7 @@ class HistoricalLatency extends React.Component {
 };
 
 HistoricalLatency.propTypes = {
-	monitors: React.PropTypes.object.isRequired
+	monitors: PropTypes.object.isRequired
 };
 
 module.exports = HistoricalLatency;

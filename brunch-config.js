@@ -10,6 +10,7 @@ module.exports = {
     enabled: true,
     whitelist: [
       "react",
+      "prop-types",
       "jquery",
       "lodash",
       "chart.js",

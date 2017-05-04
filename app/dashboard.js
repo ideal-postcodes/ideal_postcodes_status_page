@@ -1,6 +1,7 @@
 const _ = require("lodash");
 const $ = require("jquery");
 const React = require("react");
+const PropTypes = require("prop-types");
 const Incidents = require("./incidents");
 const CurrentStatus = require("./current_status");
 const HistoricalLatency = require("./historical_latency");
@@ -98,7 +99,7 @@ class Dashboard extends React.Component {
 };
 
 Dashboard.propTypes = {
-	keys: React.PropTypes.array.isRequired
+	keys: PropTypes.array.isRequired
 };
 
 module.exports = Dashboard;
