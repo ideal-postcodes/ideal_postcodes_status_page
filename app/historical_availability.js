@@ -21,7 +21,7 @@ class HistoricalAvailability extends React.Component {
 					});
 				}
 				return (
-					<tr key={probe.id}>
+					<tr key={probe.name}>
 						<td>{probe.name}</td>
 						{uptimes}
 					</tr>

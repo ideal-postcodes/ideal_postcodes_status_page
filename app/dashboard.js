@@ -14,6 +14,7 @@ class Dashboard extends React.Component {
 	constructor(props) {
 		super(props);
 		this.uptimeRobotUrl = "https://api.uptimerobot.com/v2/getMonitors";
+		this.updownUrl = "https://updown.io/api/checks";
 		const probes = props.probes.reduce((acc, probe) => {
 			acc[probe.name] = probe;
 			return acc;
@@ -32,13 +33,7 @@ class Dashboard extends React.Component {
 	componentDidMount() {
 		// $.AdminLTE.layout.fix();
 		_.toArray(this.state.probes).forEach(probe => {
-			const key = probe.uptimeRobotKey;
-			const name = probe.name;
-			this.retrieveMonitorData(key, (data, error) => {
-				const probes = this.state.probes;
-				probes[name].uptimeRobotMonitor = data.monitors[0];
-				this.setState({ probes: probes });
-			});
+			this.refreshData(probe);
 		});
 	}
 
@@ -46,12 +41,59 @@ class Dashboard extends React.Component {
 		this.setState({ focus: name });
 	}
 
-	retrieveMonitorData(key, callback) {
+	refreshData(probe) {
+		const name = probe.name;
+
+		this.retrieveUptimeRobotData(probe, (data, error) => {
+			const probes = this.state.probes;
+			if (!data) return;
+			probes[name].uptimeRobotMonitor = data.monitors[0];
+			this.setState({ probes: probes });
+		});
+
+		this.retrieveUpdownProbe(probe, (data, error) => {
+			const probes = this.state.probes;
+			if (!data) return;
+			probes[name].updownMonitor = data;
+			this.setState({ probes: probes });
+		});
+
+		this.retrieveUpdownMetrics(probe, (data, error) => {
+			const probes = this.state.probes;
+			if (!data) return;
+			probes[name].updownMetrics = data;
+			this.setState({ probes: probes });
+		});
+	}
+
+	retrieveUptimeRobotData(probe, callback) {
+		const uptimeRobotKey = probe.uptimeRobotKey;
+		if (!uptimeRobotKey) return callback(null, null);
 		return $.post(this.uptimeRobotUrl, {
-			api_key: key,
+			api_key: probe.uptimeRobotKey,
 			response_times: 1,
 			response_times_average: 30,
 			custom_uptime_ratios: "1-7-30-180-365"
+		}, callback);
+	}
+
+	retrieveUpdownProbe(probe, callback) {
+		const updownKey = probe.updownKey;
+		const updownToken = probe.updownToken;
+		if (!updownKey || !updownToken) return callback(null, null);
+		return $.get(`${this.updownUrl}/${updownToken}`, {
+			"api-key": updownKey,
+			"group": "host"
+		}, callback);
+	}
+
+	retrieveUpdownMetrics(probe, callback) {
+		const updownKey = probe.updownKey;
+		const updownToken = probe.updownToken;
+		if (!updownKey || !updownToken) return callback(null, null);
+		return $.get(`${this.updownUrl}/${updownToken}/metrics`, {
+			"api-key": updownKey,
+			"group": "host"
 		}, callback);
 	}
 

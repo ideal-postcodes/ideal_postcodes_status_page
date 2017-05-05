@@ -11,14 +11,12 @@ class CurrentStatus extends React.Component {
 		const availability = _.toArray(this.props.probes)
 			.sort((a, b) => a.name.localeCompare(b.name))
 			.map(probe => {
-				const monitor = probe.uptimeRobotMonitor;
+				const monitor = probe.updownMonitor;
 				if (!monitor) return <MonitorLoading probe={probe} key={probe.name} />
-				if (monitor.status === 2) {
-					return <MonitorUp probe={probe} key={probe.name}/>;
-				} else if (monitor.status === 8 || monitor.status === 9) {
+				if (monitor.down) {
 					return <MonitorDown probe={probe} key={probe.name}/>;
 				} else {
-					return;
+					return <MonitorUp probe={probe} key={probe.name}/>;
 				}
 			});
 		return (
@@ -73,7 +71,7 @@ class MonitorUp extends React.Component {
 				<div className="small-box bg-green">
 					<span className="small-box-footer">{probe.name} <i className="fa fa-check"></i></span>
 					<div className="inner">
-						<h3>Up</h3>
+						<h4>200 OK</h4>
 						<p>Service Operational</p>
 					</div>
 					<div className="icon add-top">
@@ -101,7 +99,7 @@ class MonitorDown extends React.Component {
 				<div className="small-box bg-yellow">
 					<span className="small-box-footer">{probe.name} <i className="fa fa-exclamation-circle"></i></span>
 					<div className="inner">
-						<h3>Down</h3>
+						<h4>Down</h4>
 						<p>Service Disruption</p>
 					</div>
 					<div className="icon add-top">

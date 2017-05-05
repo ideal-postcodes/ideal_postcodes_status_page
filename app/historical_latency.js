@@ -30,14 +30,13 @@ class HistoricalLatency extends React.Component {
 			.sort((a, b) => a.name.localeCompare(b.name))
 			.map(probe => {
 				const monitor = probe.uptimeRobotMonitor;
-				if (!monitor) return;
+				if (!monitor) return <div className="box-body" key={probe.name}></div>;
+				const times = monitor.response_times.slice().reverse();
 				const responseData = {
-					labels: monitor.response_times
-						.reverse()
-						.map(elem => new Date(elem.datetime * 1000)),
+					labels: times.map(elem => new Date(elem.datetime * 1000)),
 					datasets: [{
 						label: "Latency (ms)",
-						data: monitor.response_times.reverse().map(elem => parseInt(elem.value, 10))
+						data: times.map(elem => parseInt(elem.value, 10))
 					}]
 				}
 				const options = {

@@ -22,6 +22,10 @@ status.ideal-postcodes.co.uk is simple static web page designed to relay histori
 
 ## Configure
 
+### Updown.io Probes
+
+The status page queries the Updown.io API to retrieve availability and latency breakdown. Probe keys can be updated at [`app/config.js`](app/config.js)
+
 ### Uptime Robot Probes
 
 The status page queries the Uptime Robot API to retrieve historical availability and latencies. Probe keys can be updated at [`app/config.js`](app/config.js)
