@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.0] - 2017-05-05
+- Added updown.io integration
+- Use updown.io to draw current availability
+
 ## [0.2.1] - 2017-03-17
 - Fix broken status widget
 
