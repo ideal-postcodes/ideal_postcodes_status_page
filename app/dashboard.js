@@ -27,7 +27,10 @@ class Dashboard extends React.Component {
 
 	visibleProbes() {
 		const visible = this.state.probes[this.state.focus];
-		return visible ? visible : this.state.probes;
+		if (!visible) return this.state.probes;
+		const result = {};
+		result[visible.name] = visible;
+		return result;
 	}
 
 	componentDidMount() {
