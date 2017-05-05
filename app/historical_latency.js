@@ -5,8 +5,8 @@ const Chart = require("chart.js");
 const ReactDOM = require("react-dom");
 
 class LineChart extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 	}
 
 	componentDidMount() {
@@ -21,14 +21,16 @@ class LineChart extends React.Component {
 }
 
 class HistoricalLatency extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 	}
 
 	render() {
-		const responseCharts = _.toArray(this.props.monitors)
-			.sort((a, b) => a.friendly_name.localeCompare(b.friendly_name))
-			.map(monitor => {
+		const responseCharts = _.toArray(this.props.probes)
+			.sort((a, b) => a.name.localeCompare(b.name))
+			.map(probe => {
+				const monitor = probe.uptimeRobotMonitor;
+				if (!monitor) return;
 				const responseData = {
 					labels: monitor.response_times
 						.reverse()
@@ -42,7 +44,7 @@ class HistoricalLatency extends React.Component {
 					title: {
 						display: true,
 						position: "top",
-						text: `${monitor.friendly_name}, Global Probe Latency (ms)`
+						text: `${probe.name}, Global Probe Latency (ms)`
 					},
 					legend: {
 						display: false
@@ -88,7 +90,7 @@ class HistoricalLatency extends React.Component {
 };
 
 HistoricalLatency.propTypes = {
-	monitors: PropTypes.object.isRequired
+	probes: PropTypes.object.isRequired
 };
 
 module.exports = HistoricalLatency;

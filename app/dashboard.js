@@ -11,51 +11,43 @@ const Footer = require("./footer");
 const Sidebar = require("./sidebar");
 
 class Dashboard extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
+		this.uptimeRobotUrl = "https://api.uptimerobot.com/v2/getMonitors";
+		const probes = props.probes.reduce((acc, probe) => {
+			acc[probe.name] = probe;
+			return acc;
+		}, {});
 		this.state = {
-			monitors: {},
+			probes: probes,
 			focus: null
 		};
 	}
 
-	visibleMonitors() {
-		const result = {};
-		const visible = _.toArray(this.state.monitors)
-			.filter(m => m.key === this.state.focus);
-
-		if (visible.length === 0) return this.state.monitors;
-
-		visible.forEach(e => {
-			result[e.key] = e;
-		});
-
-		return result;
+	visibleProbes() {
+		const visible = this.state.probes[this.state.focus];
+		return visible ? visible : this.state.probes;
 	}
 
 	componentDidMount() {
 		// $.AdminLTE.layout.fix();
-		this.props.keys.forEach(mon => {
-			let key = mon.key
+		_.toArray(this.state.probes).forEach(probe => {
+			const key = probe.uptimeRobotKey;
+			const name = probe.name;
 			this.retrieveMonitorData(key, (data, error) => {
-				const monitors = this.state.monitors;
-				monitors[key] = data.monitors[0];
-				monitors[key].key = key;
-				this.setState({ monitors: monitors });
+				const probes = this.state.probes;
+				probes[name].uptimeRobotMonitor = data.monitors[0];
+				this.setState({ probes: probes });
 			});
 		});
 	}
 
-	setFocus(key) {
-		this.setState({ focus: key });
-	}
-
-	monitorUrl() {
-		return "https://api.uptimerobot.com/v2/getMonitors";
+	setFocus(name) {
+		this.setState({ focus: name });
 	}
 
 	retrieveMonitorData(key, callback) {
-		return $.post(this.monitorUrl(), {
+		return $.post(this.uptimeRobotUrl, {
 			api_key: key,
 			response_times: 1,
 			response_times_average: 30,
@@ -64,10 +56,11 @@ class Dashboard extends React.Component {
 	}
 
 	render() {
+		const visibleProbes = this.visibleProbes();
 		return (
 		<div>
 			<Header />
-			<Sidebar monitors={this.state.monitors} setFocus={this.setFocus.bind(this)} />
+			<Sidebar probes={this.state.probes} setFocus={this.setFocus.bind(this)} />
 			<div className="content-wrapper">
 				<section className="content-header">
 					<h1>Service Dashboard</h1>
@@ -75,18 +68,18 @@ class Dashboard extends React.Component {
 				<section className="content">		
 					<div>
 						<div className="row">
-							<CurrentStatus monitors={this.visibleMonitors()} />
+							<CurrentStatus probes={visibleProbes} />
 						</div>
 						<div className="row">
 							<div className="col-md-5 col-xs-12">
 								<Incidents />
 							</div>
 							<div className="col-md-7 col-xs-12">
-								<HistoricalAvailability monitors={this.visibleMonitors()} />
+								<HistoricalAvailability probes={visibleProbes} />
 							</div>
 							<div className="col-md-5 col-xs-12"></div>
 							<div className="col-md-7 col-xs-12">
-								<HistoricalLatency monitors={this.visibleMonitors()} />
+								<HistoricalLatency probes={visibleProbes} />
 							</div>
 						</div>
 					</div>
@@ -99,7 +92,7 @@ class Dashboard extends React.Component {
 };
 
 Dashboard.propTypes = {
-	keys: PropTypes.array.isRequired
+	probes: PropTypes.array.isRequired
 };
 
 module.exports = Dashboard;

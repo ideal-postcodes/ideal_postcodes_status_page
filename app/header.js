@@ -1,8 +1,8 @@
 const React = require("react");
 
 class Header extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 	}
 
 	render() {

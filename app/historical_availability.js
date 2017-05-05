@@ -3,20 +3,26 @@ const React = require("react");
 const PropTypes = require("prop-types");
 
 class HistoricalAvailability extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 	}
 
 	render() {
-		const rows = _.toArray(this.props.monitors)
-			.sort((a, b) => a.friendly_name.localeCompare(b.friendly_name))
-			.map(monitor => {
-				let uptimes = monitor.custom_uptime_ratio.split("-").map((uptime, i) => {
-					return <td key={i} className="text-right number-font">{uptime}</td> 
-				});
+		const rows = _.toArray(this.props.probes)
+			.sort((a, b) => a.name.localeCompare(b.name))
+			.map(probe => {
+				const monitor = probe.uptimeRobotMonitor;
+				let uptimes;
+				if (!monitor) {
+					uptimes = [<td key={probe.name} colSpan={5} className="text-center">Loading...</td>]
+				} else {
+					uptimes = monitor.custom_uptime_ratio.split("-").map((uptime, i) => {
+						return <td key={i} className="text-right number-font">{uptime}</td> 
+					});
+				}
 				return (
-					<tr key={monitor.id}>
-						<td>{monitor.friendly_name}</td>
+					<tr key={probe.id}>
+						<td>{probe.name}</td>
 						{uptimes}
 					</tr>
 				);
@@ -54,7 +60,7 @@ class HistoricalAvailability extends React.Component {
 };
 
 HistoricalAvailability.propTypes = {
-	monitors: PropTypes.object.isRequired
+	probes: PropTypes.object.isRequired
 };
 
 module.exports = HistoricalAvailability;

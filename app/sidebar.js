@@ -3,8 +3,8 @@ const React = require("react");
 const PropTypes = require("prop-types");
 
 class Sidebar extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 	}
 
 	handleClick(e) {
@@ -14,12 +14,12 @@ class Sidebar extends React.Component {
 	}
 
 	render() {
-		const services = _.toArray(this.props.monitors)
-			.sort((a, b) => a.friendly_name.localeCompare(b.friendly_name))
-			.map(m => {
+		const services = _.toArray(this.props.probes)
+			.sort((a, b) => a.name.localeCompare(b.name))
+			.map(probe => {
 				return (
-					<li key={m.friendly_name}>
-						<a href="#" onClick={this.handleClick.bind(this)} value={m.key}>{m.friendly_name}</a>
+					<li key={probe.name}>
+						<a href="#" onClick={this.handleClick.bind(this)} value={probe.name}>{probe.name}</a>
 					</li>
 				);
 			});
@@ -59,7 +59,7 @@ class Sidebar extends React.Component {
 }
 
 Sidebar.propTypes = {
-	monitors: PropTypes.object.isRequired,
+	probes: PropTypes.object.isRequired,
 	setFocus: PropTypes.func.isRequired
 };
 

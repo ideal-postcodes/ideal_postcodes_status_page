@@ -11,22 +11,22 @@
  * - probe.key : (string) uptime robot public key for that probe
  */ 
 
-const uptimeRobotProbeKeys = [
+const probes = [
 	{ 
 		name: "Ideal Postcodes Website", 
-		key: "m777011319-50e867b3e0d731334b2516ad"
+		uptimeRobotKey: "m777011319-50e867b3e0d731334b2516ad"
 	}, 
 	{ 
 		name: "Ideal Postcodes Feed", 
-		key: "m777011323-da2edb69ab86d8d0547f9d6f"
+		uptimeRobotKey: "m777011323-da2edb69ab86d8d0547f9d6f"
 	}, 
 	{ 
 		name: "Ideal Postcodes API", 
-		key: "m777011318-9d09d66bb432697a9d2df4c6"
+		uptimeRobotKey: "m777011318-9d09d66bb432697a9d2df4c6"
 	},
 	{ 
 		name: "Postcodes.io", 
-		key: "m777011321-048e6a4cbfe089689bd986ae"
+		uptimeRobotKey: "m777011321-048e6a4cbfe089689bd986ae"
 	}
 ];
 
@@ -51,5 +51,5 @@ const incidentHistory = {
 
 module.exports = {
 	incidentHistory: incidentHistory,
-	keys: uptimeRobotProbeKeys
+	probes: probes
 };

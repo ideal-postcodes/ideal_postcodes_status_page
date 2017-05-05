@@ -15,8 +15,8 @@ const timelineDate = d => {
 };
 
 class NoIncidentLine extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 	}
 
 	render() {
@@ -39,8 +39,8 @@ NoIncidentLine.propTypes = {
 };
 
 class IncidentLine extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 	}
 
 	render() {
@@ -69,8 +69,8 @@ const subtractDays = (currentDay, offset) => {
 };
 
 class Incidents extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 	}
 
 	render() {
