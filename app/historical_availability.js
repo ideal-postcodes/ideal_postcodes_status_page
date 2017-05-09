@@ -28,7 +28,7 @@ class HistoricalAvailability extends React.Component {
 				);
 			});
 		return (
-			<div className="box box-success">
+			<div className="box box-primary">
 				<div className="box-header with-border">
 					<h3 className="box-title">Availability Dashboard</h3>
 					<div className="box-tools pull-right">
