@@ -16,7 +16,7 @@ class StackedBarChart extends React.Component {
 	}
 
 	render() {
-		return <canvas />;
+		return <canvas height="100" />;
 	}
 }
 
@@ -94,10 +94,14 @@ class LatencyBreakdown extends React.Component {
 					scales: {
 						yAxes: [{
 							stacked: true,
-							barThickness: 20,
+							categoryPercentage: 1,
+							barPercentage: 0.3,
 							ticks: { 
 								beginAtZero: true,
 								suggestedMax: 8
+							},
+							gridLines: {
+								display: false
 							}
 						}],
 						xAxes: [{ 
