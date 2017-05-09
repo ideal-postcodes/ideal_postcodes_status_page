@@ -4,11 +4,14 @@ const React = require("react");
 const PropTypes = require("prop-types");
 const Incidents = require("./incidents");
 const CurrentStatus = require("./current_status");
+const LatencyBreakdown = require("./latency_breakdown");
 const HistoricalLatency = require("./historical_latency");
 const HistoricalAvailability = require("./historical_availability");
 const Header = require("./header");
 const Footer = require("./footer");
 const Sidebar = require("./sidebar");
+
+const yesterday = () => new Date(new Date().getTime() - (24 * 60 * 60 * 1000));
 
 class Dashboard extends React.Component {
 	constructor(props) {
@@ -96,6 +99,8 @@ class Dashboard extends React.Component {
 		if (!updownKey || !updownToken) return callback(null, null);
 		return $.get(`${this.updownUrl}/${updownToken}/metrics`, {
 			"api-key": updownKey,
+			from: yesterday().toUTCString(), 
+			to: (new Date()).toUTCString(),
 			"group": "host"
 		}, callback);
 	}
@@ -107,24 +112,27 @@ class Dashboard extends React.Component {
 			<Header />
 			<Sidebar probes={this.state.probes} setFocus={this.setFocus.bind(this)} />
 			<div className="content-wrapper">
-				<section className="content-header">
-					<h1>Service Dashboard</h1>
-				</section>
 				<section className="content">		
 					<div>
 						<div className="row">
 							<CurrentStatus probes={visibleProbes} />
 						</div>
 						<div className="row">
-							<div className="col-md-5 col-xs-12">
+							<div className="col-lg-4 col-md-5 col-sm-12 col-xs-12">
 								<Incidents />
 							</div>
-							<div className="col-md-7 col-xs-12">
-								<HistoricalAvailability probes={visibleProbes} />
-							</div>
-							<div className="col-md-5 col-xs-12"></div>
-							<div className="col-md-7 col-xs-12">
-								<HistoricalLatency probes={visibleProbes} />
+							<div className="col-lg-8 col-md-7 col-sm-12 col-xs-12">
+								<div className="row">
+									<div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+										<HistoricalAvailability probes={visibleProbes} />
+									</div>
+									<div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+										<LatencyBreakdown probes={visibleProbes} />
+									</div>
+									<div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+										<HistoricalLatency probes={visibleProbes} />
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>
