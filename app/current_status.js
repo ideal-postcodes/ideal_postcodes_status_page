@@ -69,7 +69,7 @@ class MonitorUp extends React.Component {
 		return (
 			<div className="col-lg-3 col-xs-6">
 				<div className="small-box bg-green">
-					<span className="small-box-footer">{probe.name} <i className="fa fa-check"></i></span>
+					<span className="small-box-footer"><i className="fa fa-dot-circle-o"></i> {probe.name}</span>
 					<div className="inner">
 						<h4>200 OK</h4>
 						<p>Service Operational</p>
@@ -97,7 +97,7 @@ class MonitorDown extends React.Component {
 		return (
 			<div className="col-lg-3 col-xs-6">
 				<div className="small-box bg-yellow">
-					<span className="small-box-footer">{probe.name} <i className="fa fa-exclamation-circle"></i></span>
+					<span className="small-box-footer"><i className="fa fa-circle-o"></i> {probe.name}</span>
 					<div className="inner">
 						<h4>Down</h4>
 						<p>Service Disruption</p>
