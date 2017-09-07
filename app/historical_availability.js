@@ -14,10 +14,10 @@ class HistoricalAvailability extends React.Component {
 				const monitor = probe.uptimeRobotMonitor;
 				let uptimes;
 				if (!monitor) {
-					uptimes = [<td key={probe.name} colSpan={5} className="text-center">Loading...</td>]
+					uptimes = [<td key={probe.name} colSpan={5} className="text-center">Loading...</td>];
 				} else {
 					uptimes = monitor.custom_uptime_ratio.split("-").map((uptime, i) => {
-						return <td key={i} className="text-right number-font">{uptime}</td> 
+						return <td key={i} className="text-right number-font">{uptime}</td>;
 					});
 				}
 				return (
@@ -57,7 +57,7 @@ class HistoricalAvailability extends React.Component {
 			</div>
 		);
 	}
-};
+}
 
 HistoricalAvailability.propTypes = {
 	probes: PropTypes.object.isRequired
