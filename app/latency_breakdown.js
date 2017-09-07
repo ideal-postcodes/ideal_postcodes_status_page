@@ -2,7 +2,6 @@ const _ = require("lodash");
 const React = require("react");
 const PropTypes = require("prop-types");
 const Chart = require("chart.js");
-const ReactDOM = require("react-dom");
 
 class StackedBarChart extends React.Component {
 	constructor(props) {
@@ -10,13 +9,12 @@ class StackedBarChart extends React.Component {
 	}
 
 	componentDidMount() {
-		const el = ReactDOM.findDOMNode(this);
-		const ctx = el.getContext("2d");
-		const chart = new Chart(ctx, {type: "horizontalBar", data: this.props.data, options: this.props.options || {}});
+		const ctx = this.node.getContext("2d");
+		new Chart(ctx, {type: "horizontalBar", data: this.props.data, options: this.props.options || {}});
 	}
 
 	render() {
-		return <canvas height="100" />;
+		return <canvas height="100" ref={node => this.node = node} />;
 	}
 }
 
@@ -68,7 +66,7 @@ class LatencyBreakdown extends React.Component {
 							data: zones.map(zone => zone.timings[cat]),
 							label: this.timingDictionary[cat].label,
 							backgroundColor: this.timingDictionary[cat].backgroundColor
-						}
+						};
 					})
 				};
 				const options = {
@@ -130,6 +128,11 @@ class LatencyBreakdown extends React.Component {
 			</div>
 		);
 	}
+}
+
+StackedBarChart.propTypes = {
+	data: PropTypes.object.isRequired,
+	options: PropTypes.object.isRequired
 };
 
 LatencyBreakdown.propTypes = {

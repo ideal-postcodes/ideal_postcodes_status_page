@@ -2,7 +2,6 @@ const _ = require("lodash");
 const React = require("react");
 const PropTypes = require("prop-types");
 const Chart = require("chart.js");
-const ReactDOM = require("react-dom");
 
 class LineChart extends React.Component {
 	constructor(props) {
@@ -10,13 +9,12 @@ class LineChart extends React.Component {
 	}
 
 	componentDidMount() {
-		const el = ReactDOM.findDOMNode(this);
-		const ctx = el.getContext("2d");
-		const chart = new Chart(ctx, {type: "line", data: this.props.data, options: this.props.options || {}});
+		const ctx = this.node.getContext("2d");
+		new Chart(ctx, {type: "line", data: this.props.data, options: this.props.options || {}});
 	}
 
 	render() {
-		return <canvas />;
+		return <canvas ref={node => this.node = node} />;
 	}
 }
 
@@ -38,7 +36,7 @@ class HistoricalLatency extends React.Component {
 						label: "Latency (ms)",
 						data: times.map(elem => parseInt(elem.value, 10))
 					}]
-				}
+				};
 				const options = {
 					title: {
 						display: true,
@@ -86,6 +84,11 @@ class HistoricalLatency extends React.Component {
 			</div>
 		);
 	}
+}
+
+LineChart.propTypes = {
+	data: PropTypes.object.isRequired,
+	options: PropTypes.object.isRequired
 };
 
 HistoricalLatency.propTypes = {
