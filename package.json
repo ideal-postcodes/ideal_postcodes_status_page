@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "./node_modules/.bin/brunch watch --server",
-    "eslint": "./node_modules/.bin/eslint .",
+    "lint": "./node_modules/.bin/eslint .",
     "build": "NODE_ENV=production ./node_modules/.bin/brunch build -p"
   },
   "dependencies": {

@@ -103,7 +103,7 @@ class DailyUpdateChart extends React.Component {
 			<div className="box box-primary">
 				<div className="box-header with-border">
 					<h3 className="box-title">Address Database Update Deployments</h3>
-					<p>Address updates applied to Ideal Postcodes's main Address Database</p>
+					<p>Address updates applied to Ideal Postcodes main Address Database</p>
 					<div className="box-tools pull-right">
 						<button className="btn btn-box-tool" data-widget="collapse"><i className="fa fa-minus"></i></button>
 					</div>
