@@ -1,6 +1,6 @@
 const React = require("react");
 const PropTypes = require("prop-types");
-const history = require("/config").incidentHistory;
+const history = require("./config").incidentHistory;
 
 const dateId = d => {
 	return `${d.getUTCFullYear()}-${d.getUTCMonth() + 1}-${d.getUTCDate()}`;
@@ -11,7 +11,7 @@ const timelineDate = d => {
 		day: "numeric",
 		month: "short",
 		year: "numeric"
-	})
+	});
 };
 
 class NoIncidentLine extends React.Component {
@@ -26,13 +26,13 @@ class NoIncidentLine extends React.Component {
 				<div className="timeline-item">
 					<h3 className="timeline-header">{timelineDate(this.props.date)}</h3>
 					<div className="timeline-body">
-						 No incidents reported
+						No incidents reported
 					</div>
 				</div>
 			</li>
 		);
 	}
-};
+}
 
 NoIncidentLine.propTypes = {
 	date: PropTypes.object.isRequired
@@ -55,7 +55,7 @@ class IncidentLine extends React.Component {
 			</li>
 		);
 	}
-};
+}
 
 IncidentLine.propTypes = {
 	date: PropTypes.object.isRequired,
@@ -82,9 +82,9 @@ class Incidents extends React.Component {
 		const incidents = dates.map(d => {
 			let id = dateId(d);
 			if (history[id]) {
-				return <IncidentLine date={d} message={history[id]} key={d.toJSON()}/>
+				return <IncidentLine date={d} message={history[id]} key={d.toJSON()}/>;
 			} else {
-				return <NoIncidentLine date={d} key={d.toJSON()}/>	
+				return <NoIncidentLine date={d} key={d.toJSON()}/>;
 			}
 		});
 		return (
@@ -106,6 +106,6 @@ class Incidents extends React.Component {
 			</div>
 		);
 	}
-};
+}
 
 module.exports = Incidents;

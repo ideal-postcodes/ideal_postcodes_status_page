@@ -12,7 +12,7 @@ class CurrentStatus extends React.Component {
 			.sort((a, b) => a.name.localeCompare(b.name))
 			.map(probe => {
 				const monitor = probe.updownMonitor;
-				if (!monitor) return <MonitorLoading probe={probe} key={probe.name} />
+				if (!monitor) return <MonitorLoading probe={probe} key={probe.name} />;
 				if (monitor.down) {
 					return <MonitorDown probe={probe} key={probe.name}/>;
 				} else {
@@ -79,7 +79,7 @@ class MonitorUp extends React.Component {
 					</div>
 				</div>
 			</div>
-		)
+		);
 	}
 }
 
@@ -107,9 +107,9 @@ class MonitorDown extends React.Component {
 					</div>
 				</div>
 			</div>
-		)
+		);
 	}
-};
+}
 
 MonitorDown.propTypes = {
 	probe: PropTypes.object.isRequired
