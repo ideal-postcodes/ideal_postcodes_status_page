@@ -11,7 +11,7 @@ const HistoricalAvailability = require("./historical_availability");
 const Header = require("./header");
 const Footer = require("./footer");
 const Sidebar = require("./sidebar");
-
+const unhandledError = "Internal Server Error";
 const yesterday = () => new Date(new Date().getTime() - (24 * 60 * 60 * 1000));
 
 class Dashboard extends React.Component {
@@ -21,7 +21,7 @@ class Dashboard extends React.Component {
 		this.uptimeRobotUrl = "https://api.uptimerobot.com/v2/getMonitors";
 		this.updownUrl = "https://updown.io/api/checks";
 		this.pafUpdateUrl = "http://localhost:8000/paf/updates";
-
+		this.timeToTimeout = 10000,
 		this.state = {
 			pafData: {},
 			focus: null,
@@ -59,17 +59,20 @@ class Dashboard extends React.Component {
 	}
 	
 	retrievePafData(callback) {
-		$.ajax(this.pafUpdateUrl)
+		$.get({
+			url : this.pafUpdateUrl, 
+			timeout: this.timeToTimeout
+		})
 			.done(data => callback(null, data))
-			.fail((_, __, errorThrown) => callback(errorThrown, null));
+			.fail((_, __, errorThrown) => callback(errorThrown || unhandledError, null));
 	}
-
+	
 	updatePafData() {
-		this.retrievePafData((data, error) => {
+		this.retrievePafData((error, data) => {
 			if (error) {
 				this.setState({
 					pafData: {
-						error: error || "Internal Server Error"
+						error: error
 					}
 				}); 
 				return;
@@ -77,41 +80,71 @@ class Dashboard extends React.Component {
 			this.setState({ pafData: data });
 		});
 	}
-
+	
 	retrieveUptimeRobotData(probe, callback) {
 		const uptimeRobotKey = probe.uptimeRobotKey;
 		if (!uptimeRobotKey) return callback(null, null);
-		return $.post(this.uptimeRobotUrl, {
-			api_key: probe.uptimeRobotKey,
-			response_times: 1,
-			response_times_average: 30,
-			custom_uptime_ratios: "1-7-30-180-365"
-		}, callback);
+		return $.post({
+			url: this.uptimeRobotUrl, 
+			data: {
+				api_key: probe.uptimeRobotKey,
+				response_times: 1,
+				response_times_average: 30,
+				custom_uptime_ratios: "1-7-30-180-365"
+			},
+			timeout: this.timeToTimeout
+		})
+			.done(data => callback(null, data))
+			.fail((_, __, errorThrown) => callback(errorThrown || unhandledError, null));
 	}
-
+	
 	updateUptimeRobotData(probe) {
-		this.retrieveUptimeRobotData(probe, (data, error) => {
-			const probes = this.state.probes;
+		this.retrieveUptimeRobotData(probe, (error, data) => {
+			if (error) {
+				this.setState({
+					probes: {
+						probe: {
+							error: error
+						}
+					}
+				});
+				return;
+			}
 			if (!data) return;
+			const probes = this.state.probes;
 			probes[probe.name].uptimeRobotMonitor = data.monitors[0];
 			this.setState({ probes: probes });
 		});
 	}
-
+	
 	retrieveUpdownProbe(probe, callback) {
 		const updownKey = probe.updownKey;
 		const updownToken = probe.updownToken;
-		if (!updownKey || !updownToken) return callback(null, null);
-		return $.get(`${this.updownUrl}/${updownToken}`, {
-			"api-key": updownKey,
-			"group": "host"
-		}, callback);
+		if (!updownKey || !updownToken) return callback(null, null); //might need to get rid of this
+		return $.get({
+			url: `${this.updownUrl}/${updownToken}`,
+			data: {
+				"api-key": updownKey,
+				"group": "host"
+			},
+			timeout: this.timeToTimeout
+		})
+			.done(data => callback(null, data))
+			.fail((_, __, errorThrown) => callback(errorThrown || unhandledError), null);
 	}
-
+	
 	updateUpdownProbe(probe) {
-		this.retrieveUpdownProbe(probe, (data, error) => {
+		this.retrieveUpdownProbe(probe, (error, data) => {
 			const probes = this.state.probes;
-			if (!data) return;
+			if (error) {
+				this.state({
+					probes: {
+						probe: {
+							error: error
+						}
+					}
+				});
+			}
 			probes[probe.name].updownMonitor = data;
 			this.setState({ probes: probes });
 		});
@@ -121,16 +154,32 @@ class Dashboard extends React.Component {
 		const updownKey = probe.updownKey;
 		const updownToken = probe.updownToken;
 		if (!updownKey || !updownToken) return callback(null, null);
-		return $.get(`${this.updownUrl}/${updownToken}/metrics`, {
-			"api-key": updownKey,
-			from: yesterday().toUTCString(), 
-			to: (new Date()).toUTCString(),
-			"group": "host"
-		}, callback);
+		return $.get({
+			url: `${this.updownUrl}/${updownToken}/metrics`,
+			data: {
+				"api-key": updownKey,
+				from: yesterday().toUTCString(), 
+				to: (new Date()).toUTCString(),
+				"group": "host"
+			},
+			timeout: this.timeToTimeout
+		})
+			.done(data => callback(null, data))
+			.fail((_, __, errorThrown) => callback(errorThrown || unhandledError, null));
 	}
+	
 
 	updateUpdownMetrics(probe) {
-		this.retrieveUpdownMetrics(probe, (data, error) => {
+		this.retrieveUpdownMetrics(probe, (error, data) => {
+			if (error) {
+				this.state({
+					probes: {
+						probe: {
+							error: error
+						}
+					}
+				});
+			}
 			const probes = this.state.probes;
 			if (!data) return;
 			probes[probe.name].updownMetrics = data;
@@ -160,13 +209,13 @@ class Dashboard extends React.Component {
 											<HistoricalAvailability probes={visibleProbes} />
 										</div>
 										<div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-											<DailyUpdateChart pafData={this.state.pafData} retrievePafData={this.retrievePafData.bind(this)}/>
+											<DailyUpdateChart pafData={this.state.pafData} updatePafData={this.updatePafData.bind(this)}/>
 										</div>
 										<div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 											<LatencyBreakdown probes={visibleProbes} />
 										</div>
 										<div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-											<HistoricalLatency probes={visibleProbes} />
+											<HistoricalLatency probes={visibleProbes} refreshData={this.updateUptimeRobotData.bind(this)}/>
 										</div>
 									</div>
 								</div>
