@@ -41,7 +41,7 @@ class DailyUpdateChart extends React.Component {
 	}
 	
 	isErrored() {
-		return !!this.props.pafData["error"];
+		return !!this.props.pafData.error;
 	}
 
 	isUnitialised() {
