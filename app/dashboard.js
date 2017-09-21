@@ -20,7 +20,7 @@ class Dashboard extends React.Component {
 
 		this.uptimeRobotUrl = "https://api.uptimerobot.com/v2/getMonitors";
 		this.updownUrl = "https://updown.io/api/checks";
-		this.pafUpdateUrl = "http://localhost:8000/paf/updates";
+		this.pafUpdateUrl = "https://meta.ideal-postcodes.co.uk/paf/updates";
 		this.timeToTimeout = 10000,
 		this.state = {
 			pafData: {},
