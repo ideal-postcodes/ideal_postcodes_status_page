@@ -22,52 +22,83 @@ class HistoricalLatency extends React.Component {
 	constructor(props) {
 		super(props);
 	}
+	
+	isErrored(probe) {
+		return !!probe.error;
+	}
+	
+	generateSingleChart(probe) {
+		const monitor = probe.uptimeRobotMonitor;
+		const times = monitor.response_times.slice().reverse();
+		const responseData = {
+			labels: times.map(elem => new Date(elem.datetime * 1000)),
+			datasets: [{
+				label: "Latency (ms)",
+				data: times.map(elem => parseInt(elem.value, 10))
+			}]
+		};
+		const options = {
+			title: {
+				display: true,
+				position: "top",
+				text: `${probe.name}, Global Probe Latency (ms)`
+			},
+			legend: {
+				display: false
+			},
+			scales: {
+				yAxes: [{
+					ticks: {
+						beginAtZero:true,
+						suggestedMax: 1000
+					}
+				}],
+				xAxes: [{
+					type: "time",
+					time: {
+						unit: "hour"
+					} 
+				}]
+			}
+		};
+		return (
+			<div className="box-body" key={probe.name}>
+				<LineChart data={responseData}
+					options={options} />
+			</div>
+		);
+	}
+	
+	isUnitialised(probe) {
+		return probe.uptimeRobotMonitor === undefined;
+	}
+	
+	
+	renderSingleChart(probe) {
+		if (this.isUnitialised(probe)) {
+			return <div className="box-body" key={probe.name}>Loading...</div>;
+		} else if (this.isErrored(probe)) {
+			return (
+				<div className="box-body" key={probe.name}>
+					<p>
+						An error occurred when retrieving this data 
+						<button onClick={this.props.refreshData}>Try again</button>
+					</p>
+				</div>
+			);
+		}
+		else {
+			return this.generateSingleChart(probe);
+		}
+	}
+	
+	renderCharts() {
+		return _.toArray(this.props.probes)
+			.sort((a, b) => a.name.localeCompare(b.name))
+			.map(probe => this.renderSingleChart(probe));
+	}
 
 	render() {
-		const responseCharts = _.toArray(this.props.probes)
-			.sort((a, b) => a.name.localeCompare(b.name))
-			.map(probe => {
-				const monitor = probe.uptimeRobotMonitor;
-				if (!monitor) return <div className="box-body" key={probe.name}></div>;
-				const times = monitor.response_times.slice().reverse();
-				const responseData = {
-					labels: times.map(elem => new Date(elem.datetime * 1000)),
-					datasets: [{
-						label: "Latency (ms)",
-						data: times.map(elem => parseInt(elem.value, 10))
-					}]
-				};
-				const options = {
-					title: {
-						display: true,
-						position: "top",
-						text: `${probe.name}, Global Probe Latency (ms)`
-					},
-					legend: {
-						display: false
-					},
-					scales: {
-						yAxes: [{
-							ticks: {
-								beginAtZero:true,
-								suggestedMax: 1000
-							}
-						}],
-						xAxes: [{
-							type: "time",
-							time: {
-								unit: "hour"
-							} 
-						}]
-					}
-				};
-				return (
-					<div className="box-body" key={monitor.id}>
-						<LineChart data={responseData}
-							options={options} />
-					</div>
-				);
-			});
 		return (
 			<div className="box box-primary">
 				<div className="box-header with-border">
@@ -77,9 +108,9 @@ class HistoricalLatency extends React.Component {
 						<button className="btn btn-box-tool" data-widget="collapse"><i className="fa fa-minus"></i></button>
 					</div>
 				</div>
-				{responseCharts}
+				{this.renderCharts()}
 				<div className="box-footer clearfix">
-						
+				
 				</div>
 			</div>
 		);
