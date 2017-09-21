@@ -89,8 +89,10 @@ class DailyUpdateChart extends React.Component {
 		} else if (this.isErrored()) {
 			return (
 				<p>
-					An error occurred when retrieving this data 
-					<button onClick={this.props.retrievePafData}>Try again</button>
+					An error occurred when retrieving this data &nbsp;
+					<button className="btn btn-xs btn-info" onClick={this.props.retrievePafData}>
+						<i className="fa fa-refresh"></i> Try again
+					</button>
 				</p>
 			);
 		} else {

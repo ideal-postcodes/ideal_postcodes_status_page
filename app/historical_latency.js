@@ -81,8 +81,10 @@ class HistoricalLatency extends React.Component {
 			return (
 				<div className="box-body" key={probe.name}>
 					<p>
-						An error occurred when retrieving this data 
-						<button onClick={this.props.refreshData}>Try again</button>
+						An error occurred when retrieving this data &nbsp;
+						<button className="btn btn-xs btn-info" onClick={this.props.refreshData}>
+							<i className="fa fa-refresh"></i> Try again
+						</button>
 					</p>
 				</div>
 			);
