@@ -51,69 +51,106 @@ class LatencyBreakdown extends React.Component {
 			}
 		};
 	}
+	
+	isErrored(probe) {
+		return !!probe.error
+	}
+	
+	isUnitialised (probe) {
+		return probe.updownMetrics === undefined
+	}
+	
+	generateErrorMsg(probe) {
+		return (
+			<div className="box-body" key={probe.name}>
+				<p>
+					An error occurred when retrieving this data &nbsp;
+					<button className="btn btn-xs btn-info" onClick={this.props.refreshUpdownMetrics}>
+						<i className="fa fa-refresh"></i> Try again
+					</button>
+				</p>
+			</div>
+		);
+	}
+	
+	generateSingleChart (probe) {
+		const monitor = probe.updownMetrics;
+		const zones = this.hosts.map(host => monitor[host]);
+		const responseData = {
+			labels: zones.map(zone => zone.host.country),
+			datasets: this.timingCategories.map(cat => {
+				return {
+					data: zones.map(zone => zone.timings[cat]),
+					label: this.timingDictionary[cat].label,
+					backgroundColor: this.timingDictionary[cat].backgroundColor
+				};
+			})
+		};
+		const options = {
+			animation: {
+				duration: 0
+			},
+			tooltips: {
+				enabled: true,
+				position: "nearest",
+				callbacks: {
+					title: () => {}
+				}
+			},
+			title: {
+				display: true,
+				position: "top",
+				text: `${probe.name}, Latency Breakdown (ms)`
+			},
+			legend: {
+				display: false,
+				position: "right"
+			},
+			scales: {
+				yAxes: [{
+					stacked: true,
+					categoryPercentage: 1,
+					barPercentage: 0.3,
+					ticks: { 
+						beginAtZero: true,
+						suggestedMax: 8
+					},
+					gridLines: {
+						display: false
+					}
+				}],
+				xAxes: [{ 
+					stacked: true
+				}]
+			}
+		};
+		return (
+			<div className="box-body" key={probe.name}>
+				<StackedBarChart data={responseData}
+					options={options} />
+			</div>
+		);
+	}
+	
+	renderSingleChart (probe) {
+		if (this.isUnitialised(probe)) {
+			return <div className="box-body" key={probe.name}>Loading...</div>
+		}
+		else if (this.isErrored(probe)) {
+			return this.generateErrorMsg(probe);
+		}
+		else {
+			return this.generateSingleChart(probe);
+		}
+	}
+	
+	renderCharts() {
+		return _.toArray(this.props.probes)
+				.sort((a, b) => a.name.localeCompare(b.name))
+				.map(probe => this.renderSingleChart(probe));
+	}
 
 	render() {
-		const responseCharts = _.toArray(this.props.probes)
-			.sort((a, b) => a.name.localeCompare(b.name))
-			.map(probe => {
-				const monitor = probe.updownMetrics;
-				if (!monitor) return <div className="box-body" key={probe.name}></div>;
-				const zones = this.hosts.map(host => monitor[host]);
-				const responseData = {
-					labels: zones.map(zone => zone.host.country),
-					datasets: this.timingCategories.map(cat => {
-						return {
-							data: zones.map(zone => zone.timings[cat]),
-							label: this.timingDictionary[cat].label,
-							backgroundColor: this.timingDictionary[cat].backgroundColor
-						};
-					})
-				};
-				const options = {
-					animation: {
-						duration: 0
-					},
-					tooltips: {
-						enabled: true,
-						position: "nearest",
-						callbacks: {
-							title: () => {}
-						}
-					},
-					title: {
-						display: true,
-						position: "top",
-						text: `${probe.name}, Latency Breakdown (ms)`
-					},
-					legend: {
-						display: false,
-						position: "right"
-					},
-					scales: {
-						yAxes: [{
-							stacked: true,
-							categoryPercentage: 1,
-							barPercentage: 0.3,
-							ticks: { 
-								beginAtZero: true,
-								suggestedMax: 8
-							},
-							gridLines: {
-								display: false
-							}
-						}],
-						xAxes: [{ 
-							stacked: true
-						}]
-					}
-				};
-				return (
-					<div className="box-body" key={probe.name}>
-						<StackedBarChart data={responseData}
-							options={options} />
-					</div>
-				);
-			});
 		return (
 			<div className="box box-primary">
 				<div className="box-header with-border">
@@ -123,7 +160,7 @@ class LatencyBreakdown extends React.Component {
 						<button className="btn btn-box-tool" data-widget="collapse"><i className="fa fa-minus"></i></button>
 					</div>
 				</div>
-				{responseCharts}
+				{this.renderCharts()}
 				<div className="box-footer clearfix"></div>
 			</div>
 		);

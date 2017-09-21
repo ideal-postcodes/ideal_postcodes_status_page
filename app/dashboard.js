@@ -120,7 +120,7 @@ class Dashboard extends React.Component {
 	retrieveUpdownProbe(probe, callback) {
 		const updownKey = probe.updownKey;
 		const updownToken = probe.updownToken;
-		if (!updownKey || !updownToken) return callback(null, null); //might need to get rid of this
+		if (!updownKey || !updownToken) return callback(null, null);
 		return $.get({
 			url: `${this.updownUrl}/${updownToken}`,
 			data: {
@@ -212,10 +212,10 @@ class Dashboard extends React.Component {
 											<DailyUpdateChart pafData={this.state.pafData} updatePafData={this.updatePafData.bind(this)}/>
 										</div>
 										<div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-											<LatencyBreakdown probes={visibleProbes} />
+											<LatencyBreakdown probes={visibleProbes} refreshUpdownMetrics={this.updateUpdownMetrics.bind(this)}/>
 										</div>
 										<div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-											<HistoricalLatency probes={visibleProbes} refreshData={this.updateUptimeRobotData.bind(this)}/>
+											<HistoricalLatency probes={visibleProbes} refreshUptimeData={this.updateUptimeRobotData.bind(this)}/>
 										</div>
 									</div>
 								</div>

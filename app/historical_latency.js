@@ -73,21 +73,24 @@ class HistoricalLatency extends React.Component {
 		return probe.uptimeRobotMonitor === undefined;
 	}
 	
+	generateErrorMsg(probe) {
+		return (
+			<div className="box-body" key={probe.name}>
+				<p>
+					An error occurred when retrieving this data &nbsp;
+					<button className="btn btn-xs btn-info" onClick={this.props.refreshUptimeData}>
+						<i className="fa fa-refresh"></i> Try again
+					</button>
+				</p>
+			</div>
+		);
+	}
 	
 	renderSingleChart(probe) {
 		if (this.isUnitialised(probe)) {
 			return <div className="box-body" key={probe.name}>Loading...</div>;
 		} else if (this.isErrored(probe)) {
-			return (
-				<div className="box-body" key={probe.name}>
-					<p>
-						An error occurred when retrieving this data &nbsp;
-						<button className="btn btn-xs btn-info" onClick={this.props.refreshData}>
-							<i className="fa fa-refresh"></i> Try again
-						</button>
-					</p>
-				</div>
-			);
+			return this.generateErrorMsg(probe);
 		}
 		else {
 			return this.generateSingleChart(probe);
