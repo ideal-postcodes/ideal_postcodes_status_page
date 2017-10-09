@@ -43,6 +43,7 @@ class HistoricalLatency extends React.Component {
 				position: "top",
 				text: `${probe.name}, Global Probe Latency (ms)`
 			},
+			responsiveAnimationDuration: 500,
 			legend: {
 				display: false
 			},

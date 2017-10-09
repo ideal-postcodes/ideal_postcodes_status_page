@@ -102,6 +102,7 @@ class LatencyBreakdown extends React.Component {
 				position: "top",
 				text: `${probe.name}, Latency Breakdown (ms)`
 			},
+			responsiveAnimationDuration: 500,
 			legend: {
 				display: false,
 				position: "right"

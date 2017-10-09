@@ -14,6 +14,7 @@ class GroupedBarChart extends React.Component {
 			},
 			legend: { display: false },
 			responsive: true,
+			responsiveAnimationDuration: 500,
 			scales: {
 				xAxes: [{
 					stacked: true,
