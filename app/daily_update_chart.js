@@ -104,8 +104,8 @@ class DailyUpdateChart extends React.Component {
 		return (
 			<div className="box box-primary">
 				<div className="box-header with-border">
-					<h3 className="box-title">Address Database Update Deployments</h3>
-					<p>Address updates applied to Ideal Postcodes main Address Database</p>
+					<h3 className="box-title">Address Data Currency</h3>
+					<p>Most recent Postcode Address File updates (addresses changes per day)</p>
 					<div className="box-tools pull-right">
 						<button className="btn btn-box-tool" data-widget="collapse"><i className="fa fa-minus"></i></button>
 					</div>
@@ -113,7 +113,9 @@ class DailyUpdateChart extends React.Component {
 				<div className="box-body">
 					{this.renderStatus()}
 				</div> 
-				<div className="box-footer clearfix"></div>
+				<div className="box-footer clearfix">
+					<p><small>Ideal-Postcodes.co.uk updates it's main address file from Royal Mail daily</small></p>
+				</div>
 			</div>
 		);
 	}
