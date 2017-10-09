@@ -13,7 +13,7 @@
     "build": "NODE_ENV=production ./node_modules/.bin/brunch build -p"
   },
   "dependencies": {
-    "chart.js": "~2.5.0",
+    "chart.js": "~2.7.0",
     "font-awesome": "~4.7.0",
     "ionicons": "~2.0.0",
     "jquery": "~3.1.1",
