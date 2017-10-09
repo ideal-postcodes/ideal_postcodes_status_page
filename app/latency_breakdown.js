@@ -53,19 +53,19 @@ class LatencyBreakdown extends React.Component {
 	}
 	
 	isErrored(probe) {
-		return !!probe.error
+		return !!probe.updownMetrics.error
 	}
 	
 	isUnitialised (probe) {
 		return probe.updownMetrics === undefined
 	}
 	
-	generateErrorMsg(probe) {
+	errorMessage(probe) {
 		return (
 			<div className="box-body" key={probe.name}>
 				<p>
 					An error occurred when retrieving this data &nbsp;
-					<button className="btn btn-xs btn-info" onClick={this.props.refreshUpdownMetrics}>
+					<button className="btn btn-xs btn-info" onClick={() => this.props.refresh(probe)}>
 						<i className="fa fa-refresh"></i> Try again
 					</button>
 				</p>
@@ -73,7 +73,7 @@ class LatencyBreakdown extends React.Component {
 		);
 	}
 	
-	generateSingleChart (probe) {
+	chart (probe) {
 		const monitor = probe.updownMetrics;
 		const zones = this.hosts.map(host => monitor[host]);
 		const responseData = {
@@ -137,10 +137,10 @@ class LatencyBreakdown extends React.Component {
 			return <div className="box-body" key={probe.name}>Loading...</div>
 		}
 		else if (this.isErrored(probe)) {
-			return this.generateErrorMsg(probe);
+			return this.errorMessage(probe);
 		}
 		else {
-			return this.generateSingleChart(probe);
+			return this.chart(probe);
 		}
 	}
 	
@@ -173,6 +173,7 @@ StackedBarChart.propTypes = {
 };
 
 LatencyBreakdown.propTypes = {
+	refresh: PropTypes.func.isRequired,
 	probes: PropTypes.object.isRequired
 };
 

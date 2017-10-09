@@ -24,10 +24,10 @@ class HistoricalLatency extends React.Component {
 	}
 	
 	isErrored(probe) {
-		return !!probe.error;
+		return !!probe.uptimeRobotMonitor.error;
 	}
 	
-	generateSingleChart(probe) {
+	chart(probe) {
 		const monitor = probe.uptimeRobotMonitor;
 		const times = monitor.response_times.slice().reverse();
 		const responseData = {
@@ -73,12 +73,12 @@ class HistoricalLatency extends React.Component {
 		return probe.uptimeRobotMonitor === undefined;
 	}
 	
-	generateErrorMsg(probe) {
+	errorMessage(probe) {
 		return (
 			<div className="box-body" key={probe.name}>
 				<p>
 					An error occurred when retrieving this data &nbsp;
-					<button className="btn btn-xs btn-info" onClick={this.props.refreshUptimeData}>
+					<button className="btn btn-xs btn-info" onClick={() => this.props.refresh(probe)}>
 						<i className="fa fa-refresh"></i> Try again
 					</button>
 				</p>
@@ -90,10 +90,10 @@ class HistoricalLatency extends React.Component {
 		if (this.isUnitialised(probe)) {
 			return <div className="box-body" key={probe.name}>Loading...</div>;
 		} else if (this.isErrored(probe)) {
-			return this.generateErrorMsg(probe);
+			return this.errorMessage(probe);
 		}
 		else {
-			return this.generateSingleChart(probe);
+			return this.chart(probe);
 		}
 	}
 	
@@ -128,6 +128,7 @@ LineChart.propTypes = {
 };
 
 HistoricalLatency.propTypes = {
+	refresh: PropTypes.func.isRequired,
 	probes: PropTypes.object.isRequired
 };
 

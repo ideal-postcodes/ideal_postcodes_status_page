@@ -4,6 +4,7 @@ const React = require("react");
 const PropTypes = require("prop-types");
 const Incidents = require("./incidents");
 const CurrentStatus = require("./current_status");
+const ErrorBoundary = require("./error_boundary");
 const LatencyBreakdown = require("./latency_breakdown");
 const DailyUpdateChart = require("./daily_update_chart");
 const HistoricalLatency = require("./historical_latency");
@@ -21,10 +22,31 @@ class Dashboard extends React.Component {
 		this.uptimeRobotUrl = "https://api.uptimerobot.com/v2/getMonitors";
 		this.updownUrl = "https://updown.io/api/checks";
 		this.pafUpdateUrl = "https://meta.ideal-postcodes.co.uk/paf/updates";
-		this.timeToTimeout = 10000,
+		this.timeToTimeout = 10000;
 		this.state = {
+			/**
+			 * Stores key/value (date/updatedata) for PAF Updates
+			 * If error, pafData.error will be defined
+			 * @type {object}
+			 */
 			pafData: {},
 			focus: null,
+
+			/**
+			 * Key/value store of probe data. E.g.
+			 * {
+			 * 	"Ideal Postcodes Website": {
+			 *  	uptimeRobotMonitor: ...DATA...
+			 *		updownMonitor: ...DATA...
+			 *		updownMetrics: ...DATA...
+			 * 	},
+			 * 	"Ideal Postcodes Feed": {
+			 * 	  uptimeRobotMonitor: { error: "Error stored as object" }
+			 * 	},
+			 * 	...
+			 * }
+			 * @type {object}
+			 */
 			probes: props.probes.reduce((acc, probe) => {
 				acc[probe.name] = probe;
 				return acc;
@@ -94,25 +116,18 @@ class Dashboard extends React.Component {
 			},
 			timeout: this.timeToTimeout
 		})
-			.done(data => callback(null, data))
+			.done(data => {
+				//UpTime Robot returns 200 response for errors
+				if (data.error) return callback(new Error(data.message));
+				callback(null, data)
+			})
 			.fail((_, __, errorThrown) => callback(errorThrown || unhandledError, null));
 	}
 	
 	updateUptimeRobotData(probe) {
 		this.retrieveUptimeRobotData(probe, (error, data) => {
-			if (error) {
-				this.setState({
-					probes: {
-						probe: {
-							error: error
-						}
-					}
-				});
-				return;
-			}
-			if (!data) return;
 			const probes = this.state.probes;
-			probes[probe.name].uptimeRobotMonitor = data.monitors[0];
+			probes[probe.name].uptimeRobotMonitor = error ? { error: error } : data.monitors[0]; 
 			this.setState({ probes: probes });
 		});
 	}
@@ -136,16 +151,7 @@ class Dashboard extends React.Component {
 	updateUpdownProbe(probe) {
 		this.retrieveUpdownProbe(probe, (error, data) => {
 			const probes = this.state.probes;
-			if (error) {
-				this.state({
-					probes: {
-						probe: {
-							error: error
-						}
-					}
-				});
-			}
-			probes[probe.name].updownMonitor = data;
+			probes[probe.name].updownMonitor = error ? { error: error } : data; 
 			this.setState({ probes: probes });
 		});
 	}
@@ -171,18 +177,8 @@ class Dashboard extends React.Component {
 
 	updateUpdownMetrics(probe) {
 		this.retrieveUpdownMetrics(probe, (error, data) => {
-			if (error) {
-				this.state({
-					probes: {
-						probe: {
-							error: error
-						}
-					}
-				});
-			}
 			const probes = this.state.probes;
-			if (!data) return;
-			probes[probe.name].updownMetrics = data;
+			probes[probe.name].updownMetrics = error ? { error: error } : data;
 			this.setState({ probes: probes });
 		});
 	}
@@ -197,7 +193,10 @@ class Dashboard extends React.Component {
 					<section className="content">		
 						<div>
 							<div className="row">
-								<CurrentStatus probes={visibleProbes} />
+								<ErrorBoundary>
+									<CurrentStatus probes={visibleProbes} 
+										refresh={this.updateUpdownProbe.bind(this)} />
+								</ErrorBoundary>
 							</div>
 							<div className="row">
 								<div className="col-lg-4 col-md-5 col-sm-12 col-xs-12">
@@ -206,16 +205,28 @@ class Dashboard extends React.Component {
 								<div className="col-lg-8 col-md-7 col-sm-12 col-xs-12">
 									<div className="row">
 										<div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-											<HistoricalAvailability probes={visibleProbes} />
+											<ErrorBoundary>
+												<HistoricalAvailability probes={visibleProbes} 
+													refresh={this.updateUptimeRobotData.bind(this)} />
+											</ErrorBoundary>
 										</div>
 										<div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-											<DailyUpdateChart pafData={this.state.pafData} updatePafData={this.updatePafData.bind(this)}/>
+											<ErrorBoundary>
+												<DailyUpdateChart pafData={this.state.pafData} 
+													refresh={this.updatePafData.bind(this)}/>
+											</ErrorBoundary>
 										</div>
 										<div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-											<LatencyBreakdown probes={visibleProbes} refreshUpdownMetrics={this.updateUpdownMetrics.bind(this)}/>
+											<ErrorBoundary>
+												<LatencyBreakdown probes={visibleProbes} 
+													refresh={this.updateUpdownMetrics.bind(this)}/>
+											</ErrorBoundary>
 										</div>
 										<div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-											<HistoricalLatency probes={visibleProbes} refreshUptimeData={this.updateUptimeRobotData.bind(this)}/>
+											<ErrorBoundary>
+												<HistoricalLatency probes={visibleProbes} 
+													refresh={this.updateUptimeRobotData.bind(this)}/>
+											</ErrorBoundary>
 										</div>
 									</div>
 								</div>

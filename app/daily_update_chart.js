@@ -90,7 +90,7 @@ class DailyUpdateChart extends React.Component {
 			return (
 				<p>
 					An error occurred when retrieving this data &nbsp;
-					<button className="btn btn-xs btn-info" onClick={this.props.retrievePafData}>
+					<button className="btn btn-xs btn-info" onClick={this.props.refresh}>
 						<i className="fa fa-refresh"></i> Try again
 					</button>
 				</p>
@@ -127,7 +127,7 @@ GroupedBarChart.propTypes = {
 };
 
 DailyUpdateChart.propTypes = {
-	retrievePafData: PropTypes.func,
+	refresh: PropTypes.func,
 	pafData: PropTypes.object.isRequired
 };
 		
