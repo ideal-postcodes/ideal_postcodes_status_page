@@ -119,7 +119,7 @@ class Dashboard extends React.Component {
 			.done(data => {
 				//UpTime Robot returns 200 response for errors
 				if (data.error) return callback(new Error(data.message));
-				callback(null, data)
+				callback(null, data);
 			})
 			.fail((_, __, errorThrown) => callback(errorThrown || unhandledError, null));
 	}

@@ -114,9 +114,7 @@ class DailyUpdateChart extends React.Component {
 				<div className="box-body">
 					{this.renderStatus()}
 				</div> 
-				<div className="box-footer clearfix">
-					<p><small>Ideal-Postcodes.co.uk updates it's main address file from Royal Mail daily</small></p>
-				</div>
+				<div className="box-footer clearfix"></div>
 			</div>
 		);
 	}

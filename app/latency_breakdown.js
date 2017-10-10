@@ -53,11 +53,11 @@ class LatencyBreakdown extends React.Component {
 	}
 	
 	isErrored(probe) {
-		return !!probe.updownMetrics.error
+		return !!probe.updownMetrics.error;
 	}
 	
 	isUnitialised (probe) {
-		return probe.updownMetrics === undefined
+		return probe.updownMetrics === undefined;
 	}
 	
 	errorMessage(probe) {
@@ -135,7 +135,7 @@ class LatencyBreakdown extends React.Component {
 	
 	renderSingleChart (probe) {
 		if (this.isUnitialised(probe)) {
-			return <div className="box-body" key={probe.name}>Loading...</div>
+			return <div className="box-body" key={probe.name}>Loading...</div>;
 		}
 		else if (this.isErrored(probe)) {
 			return this.errorMessage(probe);
@@ -147,8 +147,8 @@ class LatencyBreakdown extends React.Component {
 	
 	renderCharts() {
 		return _.toArray(this.props.probes)
-				.sort((a, b) => a.name.localeCompare(b.name))
-				.map(probe => this.renderSingleChart(probe));
+			.sort((a, b) => a.name.localeCompare(b.name))
+			.map(probe => this.renderSingleChart(probe));
 	}
 
 	render() {

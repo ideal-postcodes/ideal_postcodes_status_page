@@ -1,4 +1,5 @@
 const React = require("react");
+const PropTypes = require("prop-types");
 
 class ErrorBoundary extends React.Component {
 	constructor(props) {
@@ -8,9 +9,9 @@ class ErrorBoundary extends React.Component {
 		};
 	}
 
-	componentDidCatch(error, info) {
-    this.setState({ hasError: true });
-  }
+	componentDidCatch() {
+		this.setState({ hasError: true });
+	}
 
 	render() {
 		if (this.state.hasError) {
@@ -21,5 +22,9 @@ class ErrorBoundary extends React.Component {
 		return this.props.children;
 	}
 }
+
+ErrorBoundary.propTypes = {
+	children: PropTypes.element.isRequired
+};
 
 module.exports = ErrorBoundary;

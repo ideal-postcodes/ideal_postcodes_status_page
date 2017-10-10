@@ -11,7 +11,10 @@ class Footer extends React.Component {
 				<div className="pull-right hidden-xs">
 					<b>IDDQD</b> Ltd
 				</div>
-				<strong>&copy; {(new Date()).getFullYear()} <a href="https://ideal-postcodes.co.uk">Ideal Postcodes</a></strong>
+				<strong>
+					&copy;&nbsp;{(new Date()).getFullYear()} 
+					<a href="https://ideal-postcodes.co.uk">Ideal Postcodes</a>
+				</strong>
 			</footer>
 		);
 	}

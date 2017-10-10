@@ -24,7 +24,7 @@ class CurrentStatus extends React.Component {
 					return <MonitorLoading probe={probe} key={probe.name} />;
 				} else if (this.isErrored(probe)) {
 					return <MonitorError probe={probe} key={probe.name} 
-						refresh={this.props.refresh} />
+						refresh={this.props.refresh} />;
 				} else {
 					if (monitor.down) {
 						return <MonitorDown probe={probe} key={probe.name}/>;
