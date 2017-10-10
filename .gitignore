@@ -32,3 +32,6 @@ bower_components/
 log/
 config/
 lib/
+
+# Brunch folder for build project
+public/

@@ -9,28 +9,32 @@
   },
   "scripts": {
     "start": "./node_modules/.bin/brunch watch --server",
-    "build": "NODE_ENV=production ./node_modules/.bin/brunch build --production"
+    "lint": "./node_modules/.bin/eslint .",
+    "build": "NODE_ENV=production ./node_modules/.bin/brunch build -p"
   },
   "dependencies": {
-    "chart.js": "~2.5.0",
+    "chart.js": "~2.7.0",
     "font-awesome": "~4.7.0",
     "ionicons": "~2.0.0",
     "jquery": "~3.1.1",
     "lodash": "~4.16.4",
     "prop-types": "~15.5.8",
-    "react": "~15.5.0",
-    "react-dom": "~15.5.0"
+    "react": "~16.0.0",
+    "react-dom": "~16.0.0"
   },
   "devDependencies": {
     "auto-reload-brunch": "~2.0.0",
     "babel-brunch": "~6.0.0",
     "babel-preset-es2015": "~6.18.0",
     "babel-preset-react": "~6.16.0",
-    "brunch": "~2.1.1",
+    "brunch": "~2.10.10",
     "clean-css-brunch": ">= 1.0 < 1.8",
     "copycat-brunch": "~1.1.0",
     "css-brunch": ">= 1.0 < 1.8",
+    "eslint": "~4.5.0",
+    "eslint-plugin-react": "~7.3.0",
     "javascript-brunch": ">= 1.0 < 1.8",
-    "uglify-js-brunch": ">= 1.0 < 1.8"
+    "jshint": "~2.9.5",
+    "uglify-js-brunch": "~1.7.8"
   }
 }

@@ -2,7 +2,6 @@ const _ = require("lodash");
 const React = require("react");
 const PropTypes = require("prop-types");
 const Chart = require("chart.js");
-const ReactDOM = require("react-dom");
 
 class StackedBarChart extends React.Component {
 	constructor(props) {
@@ -10,13 +9,12 @@ class StackedBarChart extends React.Component {
 	}
 
 	componentDidMount() {
-		const el = ReactDOM.findDOMNode(this);
-		const ctx = el.getContext("2d");
-		const chart = new Chart(ctx, {type: "horizontalBar", data: this.props.data, options: this.props.options || {}});
+		const ctx = this.node.getContext("2d");
+		new Chart(ctx, {type: "horizontalBar", data: this.props.data, options: this.props.options || {}});
 	}
 
 	render() {
-		return <canvas height="100" />;
+		return <canvas height="100" ref={node => this.node = node} />;
 	}
 }
 
@@ -53,69 +51,107 @@ class LatencyBreakdown extends React.Component {
 			}
 		};
 	}
+	
+	isErrored(probe) {
+		return !!probe.updownMetrics.error;
+	}
+	
+	isUnitialised (probe) {
+		return probe.updownMetrics === undefined;
+	}
+	
+	errorMessage(probe) {
+		return (
+			<div className="box-body" key={probe.name}>
+				<p>
+					An error occurred when retrieving this data &nbsp;
+					<button className="btn btn-xs btn-info" onClick={() => this.props.refresh(probe)}>
+						<i className="fa fa-refresh"></i> Try again
+					</button>
+				</p>
+			</div>
+		);
+	}
+	
+	chart (probe) {
+		const monitor = probe.updownMetrics;
+		const zones = this.hosts.map(host => monitor[host]);
+		const responseData = {
+			labels: zones.map(zone => zone.host.country),
+			datasets: this.timingCategories.map(cat => {
+				return {
+					data: zones.map(zone => zone.timings[cat]),
+					label: this.timingDictionary[cat].label,
+					backgroundColor: this.timingDictionary[cat].backgroundColor
+				};
+			})
+		};
+		const options = {
+			animation: {
+				duration: 0
+			},
+			tooltips: {
+				enabled: true,
+				position: "nearest",
+				callbacks: {
+					title: () => {}
+				}
+			},
+			title: {
+				display: true,
+				position: "top",
+				text: `${probe.name}, Latency Breakdown (ms)`
+			},
+			responsiveAnimationDuration: 500,
+			legend: {
+				display: false,
+				position: "right"
+			},
+			scales: {
+				yAxes: [{
+					stacked: true,
+					categoryPercentage: 1,
+					barPercentage: 0.3,
+					ticks: { 
+						beginAtZero: true,
+						suggestedMax: 8
+					},
+					gridLines: {
+						display: false
+					}
+				}],
+				xAxes: [{ 
+					stacked: true
+				}]
+			}
+		};
+		return (
+			<div className="box-body" key={probe.name}>
+				<StackedBarChart data={responseData}
+					options={options} />
+			</div>
+		);
+	}
+	
+	renderSingleChart (probe) {
+		if (this.isUnitialised(probe)) {
+			return <div className="box-body" key={probe.name}>Loading...</div>;
+		}
+		else if (this.isErrored(probe)) {
+			return this.errorMessage(probe);
+		}
+		else {
+			return this.chart(probe);
+		}
+	}
+	
+	renderCharts() {
+		return _.toArray(this.props.probes)
+			.sort((a, b) => a.name.localeCompare(b.name))
+			.map(probe => this.renderSingleChart(probe));
+	}
 
 	render() {
-		const responseCharts = _.toArray(this.props.probes)
-			.sort((a, b) => a.name.localeCompare(b.name))
-			.map(probe => {
-				const monitor = probe.updownMetrics;
-				if (!monitor) return <div className="box-body" key={probe.name}></div>;
-				const zones = this.hosts.map(host => monitor[host]);
-				const responseData = {
-					labels: zones.map(zone => zone.host.country),
-					datasets: this.timingCategories.map(cat => {
-						return {
-							data: zones.map(zone => zone.timings[cat]),
-							label: this.timingDictionary[cat].label,
-							backgroundColor: this.timingDictionary[cat].backgroundColor
-						}
-					})
-				};
-				const options = {
-					animation: {
-						duration: 0
-					},
-					tooltips: {
-						enabled: true,
-						position: "nearest",
-						callbacks: {
-							title: () => {}
-						}
-					},
-					title: {
-						display: true,
-						position: "top",
-						text: `${probe.name}, Latency Breakdown (ms)`
-					},
-					legend: {
-						display: false,
-						position: "right"
-					},
-					scales: {
-						yAxes: [{
-							stacked: true,
-							categoryPercentage: 1,
-							barPercentage: 0.3,
-							ticks: { 
-								beginAtZero: true,
-								suggestedMax: 8
-							},
-							gridLines: {
-								display: false
-							}
-						}],
-						xAxes: [{ 
-							stacked: true
-						}]
-					}
-				};
-				return (
-					<div className="box-body" key={probe.name}>
-						<StackedBarChart data={responseData}
-							options={options} />
-					</div>
-				);
-			});
 		return (
 			<div className="box box-primary">
 				<div className="box-header with-border">
@@ -125,14 +161,20 @@ class LatencyBreakdown extends React.Component {
 						<button className="btn btn-box-tool" data-widget="collapse"><i className="fa fa-minus"></i></button>
 					</div>
 				</div>
-				{responseCharts}
+				{this.renderCharts()}
 				<div className="box-footer clearfix"></div>
 			</div>
 		);
 	}
+}
+
+StackedBarChart.propTypes = {
+	data: PropTypes.object.isRequired,
+	options: PropTypes.object.isRequired
 };
 
 LatencyBreakdown.propTypes = {
+	refresh: PropTypes.func.isRequired,
 	probes: PropTypes.object.isRequired
 };
 

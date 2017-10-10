@@ -7,17 +7,34 @@ class HistoricalAvailability extends React.Component {
 		super(props);
 	}
 
+	isErrored(probe) {
+		return !!probe.uptimeRobotMonitor.error;
+	}
+
+	isUnitialised(probe) {
+		return probe.uptimeRobotMonitor === undefined;
+	}
+
 	render() {
 		const rows = _.toArray(this.props.probes)
 			.sort((a, b) => a.name.localeCompare(b.name))
 			.map(probe => {
 				const monitor = probe.uptimeRobotMonitor;
 				let uptimes;
-				if (!monitor) {
-					uptimes = [<td key={probe.name} colSpan={5} className="text-center">Loading...</td>]
+				if (this.isUnitialised(probe)) {
+					uptimes = [<td key={probe.name} colSpan={5} className="text-center">Loading...</td>];
+				} else if (this.isErrored(probe)) {
+					uptimes = [
+						<td key={probe.name} colSpan={5} className="text-center">
+							An error occurred when retrieving this data &nbsp;
+							<button className="btn btn-xs btn-info" onClick={() => this.props.refresh(probe)}>
+								<i className="fa fa-refresh"></i> Try again
+							</button>
+						</td>
+					];
 				} else {
 					uptimes = monitor.custom_uptime_ratio.split("-").map((uptime, i) => {
-						return <td key={i} className="text-right number-font">{uptime}</td> 
+						return <td key={i} className="text-right number-font">{uptime}</td>;
 					});
 				}
 				return (
@@ -57,9 +74,10 @@ class HistoricalAvailability extends React.Component {
 			</div>
 		);
 	}
-};
+}
 
 HistoricalAvailability.propTypes = {
+	refresh: PropTypes.func.isRequired,
 	probes: PropTypes.object.isRequired
 };
 

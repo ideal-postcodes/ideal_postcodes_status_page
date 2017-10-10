@@ -7,16 +7,30 @@ class CurrentStatus extends React.Component {
 		super(props);
 	}
 
+	isErrored(probe) {
+		return !!probe.updownMonitor.error;
+	}
+
+	isUninitialized(probe) {
+		return probe.updownMonitor === undefined;
+	}
+
 	render() {
 		const availability = _.toArray(this.props.probes)
 			.sort((a, b) => a.name.localeCompare(b.name))
 			.map(probe => {
 				const monitor = probe.updownMonitor;
-				if (!monitor) return <MonitorLoading probe={probe} key={probe.name} />
-				if (monitor.down) {
-					return <MonitorDown probe={probe} key={probe.name}/>;
+				if (this.isUninitialized(probe)) {
+					return <MonitorLoading probe={probe} key={probe.name} />;
+				} else if (this.isErrored(probe)) {
+					return <MonitorError probe={probe} key={probe.name} 
+						refresh={this.props.refresh} />;
 				} else {
-					return <MonitorUp probe={probe} key={probe.name}/>;
+					if (monitor.down) {
+						return <MonitorDown probe={probe} key={probe.name}/>;
+					} else {
+						return <MonitorUp probe={probe} key={probe.name}/>;
+					}	
 				}
 			});
 		return (
@@ -28,7 +42,8 @@ class CurrentStatus extends React.Component {
 }
 
 CurrentStatus.propTypes = {
-	probes: PropTypes.object.isRequired
+	probes: PropTypes.object.isRequired,
+	refresh: PropTypes.func.isRequired
 };
 
 class MonitorLoading extends React.Component {
@@ -79,7 +94,7 @@ class MonitorUp extends React.Component {
 					</div>
 				</div>
 			</div>
-		)
+		);
 	}
 }
 
@@ -107,12 +122,46 @@ class MonitorDown extends React.Component {
 					</div>
 				</div>
 			</div>
-		)
+		);
 	}
-};
+}
 
 MonitorDown.propTypes = {
 	probe: PropTypes.object.isRequired
+};
+
+class MonitorError extends React.Component {
+	constructor(props) {
+		super(props);
+	}
+
+	render() {
+		const probe = this.props.probe;
+		return (
+			<div className="col-lg-3 col-xs-6">
+				<div className="small-box bg-gray">
+					<span className="small-box-footer"><i className="fa fa-circle-o"></i> {probe.name}</span>
+					<div className="inner">
+						<h4>Loading</h4>
+						<p className="text-center">
+							Probe taking a while to load? <br />
+							<button className="btn btn-xs btn-info" onClick={() => this.props.refresh(probe)}>
+								<i className="fa fa-refresh"></i> Try again
+							</button>
+						</p>
+					</div>
+					<div className="icon add-top">
+						<i className="ion ion-ios-pulse-strong"></i>
+					</div>
+				</div>
+			</div>
+		);
+	}
+}
+
+MonitorError.propTypes = {
+	probe: PropTypes.object.isRequired,
+	refresh: PropTypes.func.isRequired
 };
 
 module.exports = CurrentStatus;
