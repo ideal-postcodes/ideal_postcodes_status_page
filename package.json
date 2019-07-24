@@ -10,7 +10,9 @@
   "scripts": {
     "start": "./node_modules/.bin/brunch watch --server",
     "lint": "./node_modules/.bin/eslint .",
-    "build": "NODE_ENV=production ./node_modules/.bin/brunch build -p"
+    "build": "NODE_ENV=production ./node_modules/.bin/brunch build -p",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "dependencies": {
     "chart.js": "~2.7.0",
@@ -20,7 +22,8 @@
     "lodash": "~4.17.5",
     "prop-types": "~15.5.8",
     "react": "~16.0.0",
-    "react-dom": "~16.0.0"
+    "react-dom": "~16.0.0",
+    "snyk": "^1.52.1"
   },
   "devDependencies": {
     "auto-reload-brunch": "~2.0.0",
@@ -36,5 +39,6 @@
     "javascript-brunch": ">= 1.0 < 1.8",
     "jshint": "~2.9.5",
     "uglify-js-brunch": "~1.7.8"
-  }
+  },
+  "snyk": true
 }
